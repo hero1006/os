@@ -1,0 +1,67 @@
+# worst
+def worst_fit(b, p):
+    b = b.copy()
+    for i in range(len(p)):
+        idx = -1
+        for j in range(len(b)):
+            if b[j] >= p[i]:
+                if idx == -1 or b[j] > b[idx]:
+                    idx = j
+        if idx != -1:
+            print(i+1, p[i], "-> Block", idx+1, "| Frag:", b[idx]-p[i])
+            b[idx] = 0
+        else:
+            print(i+1, p[i], "-> Not Allocated")
+
+
+# INPUT
+p = [int(input(f"P{i+1}: ")) for i in range(int(input("Processes: ")))]
+b = [int(input(f"B{i+1}: ")) for i in range(int(input("Blocks: ")))]
+
+print("\nWORST FIT")
+worst_fit(b, p)
+
+# best
+def best_fit(b, p):
+    b = b.copy()
+    for i in range(len(p)):
+        idx = -1
+        for j in range(len(b)):
+            if b[j] >= p[i]:
+                if idx == -1 or b[j] < b[idx]:
+                    idx = j
+        if idx != -1:
+            print(i+1, p[i], "-> Block", idx+1, "| Frag:", b[idx]-p[i])
+            b[idx] = 0
+        else:
+            print(i+1, p[i], "-> Not Allocated")
+
+
+# INPUT
+p = [int(input(f"P{i+1}: ")) for i in range(int(input("Processes: ")))]
+b = [int(input(f"B{i+1}: ")) for i in range(int(input("Blocks: ")))]
+
+print("\nBEST FIT")
+best_fit(b, p)
+
+# first
+def first_fit(b, p):
+    b = b.copy()
+    for i in range(len(p)):
+        done = False
+        for j in range(len(b)):
+            if b[j] >= p[i]:
+                print(i+1, p[i], "-> Block", j+1, "| Frag:", b[j]-p[i])
+                b[j] = 0
+                done = True
+                break
+        if not done:
+            print(i+1, p[i], "-> Not Allocated")
+
+
+# INPUT
+p = [int(input(f"P{i+1}: ")) for i in range(int(input("Processes: ")))]
+b = [int(input(f"B{i+1}: ")) for i in range(int(input("Blocks: ")))]
+
+print("\nFIRST FIT")
+first_fit(b, p)
