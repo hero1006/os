@@ -1,0 +1,37 @@
+# SSTF Disk Scheduling
+
+r = list(map(int, input("Enter request queue: ").split()))
+h = int(input("Enter initial head position: "))
+
+seek = 0
+
+print("\nSeek Sequence:", h, end=" ")
+
+while r:
+    x = min(r, key=lambda i: abs(i - h))
+
+    print("->", x, end=" ")
+
+    seek += abs(x - h)
+    h = x
+    r.remove(x)
+
+print("\nTotal Seek Time:", seek)
+
+
+# FCFS Disk Scheduling
+
+r = list(map(int, input("Enter request queue: ").split()))
+h = int(input("Enter initial head position: "))
+
+seek = 0
+cur = h
+
+print("\nSeek Sequence:", h, end=" ")
+
+for i in r:
+    print("->", i, end=" ")
+    seek += abs(i - cur)
+    cur = i
+
+print("\nTotal Seek Time:", seek)
