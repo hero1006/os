@@ -1,0 +1,109 @@
+#   FCFS
+n = int(input(&quot;No. of Processes: &quot;))
+a = [int(x) for x in input(&quot;Arrivals: &quot;).split()]
+b = [int(x) for x in input(&quot;Bursts: &quot;).split()]
+
+done, time, res = [0]*n, 0, []
+while len(res) &lt; n:
+idx = -1
+for i in range(n):
+if not done[i]:
+if idx == -1 or a[i] &lt; a[idx]: idx = i
+if a[idx] &gt; time: time = a[idx]
+time += b[idx]
+done[idx] = 1
+res.append([idx+1, a[idx], b[idx], time, time-a[idx], time-a[idx]-b[idx]])
+
+print(&quot;PID\tArr\tBrst\tCT\tTAT\tWT&quot;)
+for r in res: print(*r, sep=&quot;\t&quot;)
+print(f&quot;Avg TAT: {sum(r[4] for r in res)/n}\nAvg WT: {sum(r[5] for r in res)/n}&quot;)
+
+#SJF Non-Preemptive)
+
+n = int(input(&quot;No. of Processes: &quot;))
+a = [int(x) for x in input(&quot;Arrivals: &quot;).split()]
+b = [int(x) for x in input(&quot;Bursts: &quot;).split()]
+
+done, time, res = [0]*n, 0, []
+while len(res) &lt; n:
+idx = -1
+for i in range(n):
+if a[i] &lt;= time and not done[i]:
+if idx == -1 or b[i] &lt; b[idx]: idx = i
+if idx == -1: time += 1; continue
+time += b[idx]
+done[idx] = 1
+res.append([idx+1, a[idx], b[idx], time, time-a[idx], time-a[idx]-b[idx]])
+
+print(&quot;PID\tArr\tBrst\tCT\tTAT\tWT&quot;)
+for r in res: print(*r, sep=&quot;\t&quot;)
+print(f&quot;Avg TAT: {sum(r[4] for r in res)/n}\nAvg WT: {sum(r[5] for r in res)/n}&quot;)
+
+#SJF Preemptive)
+n = int(input(&quot;No. of Processes: &quot;))
+a = [int(x) for x in input(&quot;Arrivals: &quot;).split()]
+b = [int(x) for x in input(&quot;Bursts: &quot;).split()]
+rem, done, time, res = b[:], 0, 0, [0]*n
+
+while done &lt; n:
+idx = -1
+for i in range(n):
+if a[i] &lt;= time and rem[i] &gt; 0:
+if idx == -1 or rem[i] &lt; rem[idx]: idx = i
+if idx != -1:
+rem[idx] -= 1
+if rem[idx] == 0:
+done += 1; ct = time + 1
+res[idx] = [idx+1, a[idx], b[idx], ct, ct-a[idx], ct-a[idx]-b[idx]]
+time += 1
+
+print(&quot;PID\tArr\tBrst\tCT\tTAT\tWT&quot;)
+for r in res: print(*r, sep=&quot;\t&quot;)
+print(f&quot;Avg TAT: {sum(r[4] for r in res)/n}\nAvg WT: {sum(r[5] for r in res)/n}&quot;)
+
+#Priority (Non-Preemptive)
+n = int(input(&quot;No. of Processes: &quot;))
+a = [int(x) for x in input(&quot;Arrivals: &quot;).split()]
+b = [int(x) for x in input(&quot;Bursts: &quot;).split()]
+p = [int(x) for x in input(&quot;Priorities: &quot;).split()]
+
+done, time, res = [0]*n, 0, []
+while len(res) &lt; n:
+idx = -1
+for i in range(n):
+if a[i] &lt;= time and not done[i]:
+if idx == -1 or p[i] &lt; p[idx]: idx = i
+if idx == -1: time += 1; continue
+time += b[idx]
+done[idx] = 1
+res.append([idx+1, a[idx], b[idx], time, time-a[idx], time-a[idx]-b[idx]])
+
+print(&quot;PID\tArr\tBrst\tCT\tTAT\tWT&quot;)
+for r in res: print(*r, sep=&quot;\t&quot;)
+print(f&quot;Avg TAT: {sum(r[4] for r in res)/n}\nAvg WT: {sum(r[5] for r in res)/n}&quot;)
+
+#Round Robin (RR)
+n = int(input(&quot;No. of Processes: &quot;))
+a = [int(x) for x in input(&quot;Arrivals: &quot;).split()]
+b = [int(x) for x in input(&quot;Bursts: &quot;).split()]
+tq = int(input(&quot;Quantum: &quot;))
+rem, time, q, res, visited = b[:], 0, [], [0]*n, [0]*n
+
+while any(r &gt; 0 for r in rem) or q:
+for i in range(n):
+if a[i] &lt;= time and not visited[i]:
+q.append(i); visited[i] = 1
+if not q: time += 1; continue
+idx = q.pop(0)
+run = min(rem[idx], tq)
+time += run
+rem[idx] -= run
+for i in range(n):
+if a[i] &lt;= time and not visited[i]:
+q.append(i); visited[i] = 1
+if rem[idx] &gt; 0: q.append(idx)
+else: res[idx] = [idx+1, a[idx], b[idx], time, time-a[idx], time-a[idx]-b[idx]]
+
+print(&quot;PID\tArr\tBrst\tCT\tTAT\tWT&quot;)
+for r in res: print(*r, sep=&quot;\t&quot;)
+print(f&quot;Avg TAT: {sum(r[4] for r in res)/n}\nAvg WT: {sum(r[5] for r in res)/n}&quot;)
