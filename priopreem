@@ -1,0 +1,35 @@
+n=int(input("P: "))
+
+at=list(map(int,input("AT: ").split()))
+bt=list(map(int,input("BT: ").split()))
+pr=list(map(int,input("PR: ").split()))
+
+ct=[0]*n
+wt=[0]*n
+tat=[0]*n
+d=[0]*n
+t=0
+
+for _ in range(n):
+
+    k=min(
+        [i for i in range(n) if at[i]<=t and d[i]==0],
+        key=lambda x: pr[x],
+        default=-1
+    )
+
+    if k==-1:
+        t+=1
+        continue
+
+    t+=bt[k]
+    ct[k]=t
+    tat[k]=ct[k]-at[k]
+    wt[k]=tat[k]-bt[k]
+    d[k]=1
+
+for i in range(n):
+    print("P",i+1,"CT:",ct[i],"WT:",wt[i],"TAT:",tat[i])
+
+print("Avg WT =",sum(wt)/n)
+print("Avg TAT =",sum(tat)/n)
