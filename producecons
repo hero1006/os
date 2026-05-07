@@ -1,0 +1,74 @@
+mutex = 1
+full = 0
+buffer = []
+
+def wait(s):
+    return s - 1
+
+def signal(s):
+    return s + 1
+
+size = int(input("Enter buffer size: "))
+empty = size
+
+def producer():
+
+    global mutex, full, empty
+
+    item = int(input("Enter item to produce: "))
+
+    mutex = wait(mutex)
+    buffer.append(item)
+
+    full = signal(full)
+    empty = wait(empty)
+
+    print(f"Producer produced item {item}")
+    print("Current Buffer:", buffer)
+
+    mutex = signal(mutex)
+
+def consumer():
+    
+    global mutex, full, empty
+
+    mutex = wait(mutex)
+
+    item = buffer.pop()
+    print(f"Consumer consumed item {item}")
+
+    full = wait(full)
+    empty = signal(empty)
+
+    print("Current Buffer:", buffer)
+
+    mutex = signal(mutex)
+
+while True:
+    print("\n1. Producer")
+    print("2. Consumer")
+    print("3. Exit")
+
+    choice = int(input("Enter your choice: "))
+
+    if choice == 1:
+        if mutex == 1 and empty != 0:
+            producer()
+        else:
+            print("Buffer is FULL")
+
+    elif choice == 2:
+        if mutex == 1 and full != 0:
+            consumer()
+        else:
+            print("Buffer is EMPTY")
+
+    elif choice == 3:
+        print("\nFinal Buffer State:", buffer)
+        print("Filled slots:", full)
+        print("Empty slots:", empty)
+        print("Program Ended.")
+        break
+
+    else:
+        print("Invalid choice")
