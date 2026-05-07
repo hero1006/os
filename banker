@@ -1,0 +1,27 @@
+def banker():
+    n = int(input("Processes: "))
+    m = int(input("Resources: "))
+
+    alloc = [list(map(int, input(f"Alloc P{i}: ").split())) for i in range(n)]
+    maxm  = [list(map(int, input(f"Max P{i}: ").split())) for i in range(n)]
+    avail = list(map(int, input("Available: ").split()))
+
+    need = [[maxm[i][j]-alloc[i][j] for j in range(m)] for i in range(n)]
+
+    finish = [0]*n
+    seq = []
+
+    for _ in range(n):
+        for i in range(n):
+            if not finish[i] and all(need[i][j] <= avail[j] for j in range(m)):
+                for j in range(m):
+                    avail[j] += alloc[i][j]
+                finish[i] = 1
+                seq.append(f"P{i}")
+
+    if len(seq) == n:
+        print("Safe Sequence:", " -> ".join(seq))
+    else:
+        print("Deadlock!")
+
+banker()  
