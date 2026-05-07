@@ -1,0 +1,53 @@
+# fifo
+def fifo(p, n):
+    f = []
+    hit = fault = 0
+
+    for i in p:
+        if i in f:
+            hit += 1
+            print(i, "Hit  ", f)
+        else:
+            fault += 1
+            if len(f) < n:
+                f.append(i)
+            else:
+                f.pop(0)
+                f.append(i)
+            print(i, "Fault", f)
+
+    print("\nPage Faults =", fault)
+    print("Page Hits =", hit)
+
+pages = list(map(int, input("Enter pages: ").split()))
+frames = int(input("Enter frames: "))
+
+fifo(pages, frames)
+
+# lru
+def lru(p, n):
+    f = []
+    hit = fault = 0
+
+    for i in p:
+        if i in f:
+            hit += 1
+            f.remove(i)
+            f.append(i)
+            print(i, "Hit  ", f)
+        else:
+            fault += 1
+            if len(f) < n:
+                f.append(i)
+            else:
+                f.pop(0)
+                f.append(i)
+            print(i, "Fault", f)
+
+    print("\nPage Faults =", fault)
+    print("Page Hits =", hit)
+
+pages = list(map(int, input("Enter pages: ").split()))
+frames = int(input("Enter frames: "))
+
+lru(pages, frames)
