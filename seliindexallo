@@ -1,0 +1,66 @@
+def sequential_allocation():
+    print("\n--- Sequential (Contiguous) Allocation ---")
+    file_name = input("Enter file name: ")
+    start_block = int(input("Enter starting block: "))
+    length = int(input("Enter length (number of blocks): "))
+
+    blocks = [start_block + i for i in range(length)]
+
+    print(f"\nFile: {file_name}")
+    print("Allocated blocks are:")
+    print(" -> ".join(map(str, blocks)))
+
+
+# Run
+sequential_allocation()
+
+def linked_allocation():
+    print("\n--- Linked Allocation ---")
+    file_name = input("Enter file name: ")
+    start_block = int(input("Enter starting block: "))
+    end_block = int(input("Enter ending block: "))
+
+    print("Enter the pointer (next block) for each block (-1 for end):")
+
+    blocks = []
+    current = start_block
+
+    while current != -1:
+        blocks.append(current)
+        if current == end_block:
+            break
+        next_block = int(input(f"Pointer from block {current}: "))
+        current = next_block
+
+    print(f"\nFile: {file_name}")
+    print("Allocated blocks are:")
+    print(" -> ".join(map(str, blocks)))
+
+
+# Run
+linked_allocation()
+def indexed_allocation():
+    print("\n--- Indexed Allocation ---")
+    file_name = input("Enter file name: ")
+    index_block = int(input("Enter index block: "))
+    n = int(input("Enter number of blocks in index: "))
+
+    print("Enter the blocks stored in index block:")
+    blocks = []
+    for i in range(n):
+        b = int(input(f"Block {i+1}: "))
+        blocks.append(b)
+
+    print(f"\nFile: {file_name}")
+    print(f"Index Block: {index_block}")
+    print("Allocated blocks are:")
+
+    result = "Index(" + str(index_block) + ")"
+    for b in blocks:
+        result += " -> " + str(b)
+
+    print(result)
+
+
+# Run
+indexed_allocation()
