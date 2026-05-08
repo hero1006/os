@@ -1,79 +1,94 @@
-pages = list(map(int, input(&quot;Enter Pages: &quot;).split()))
-size = int(input(&quot;No. of Frames: &quot;))
+# FIFO
+def fifo(p, n):
+    f = []; hit = fault = 0
 
-frames, faults, ptr = [&quot;-&quot;] * size, 0, 0
-total_pages = len(pages)
+    for i in p:
+        if i in f:
+            hit += 1
+            print(i, "Hit  ", f)
+        else:
+            fault += 1
+            if len(f) < n:
+                f.append(i)
+            else:
+                f.pop(0)
+                f.append(i)
+            print(i, "Fault", f)
 
-print(&quot;\nString | Frames | Status&quot;)
-for p in pages:
-status = &quot;Hit&quot;
-if p not in frames:
-status = &quot;Fault&quot;
-frames[ptr] = p
-ptr = (ptr + 1) % size
-faults += 1
-print(f&quot;{p} | {frames} | {status}&quot;)
+    print("Faults =", fault, "Hits =", hit)
 
-print(f&quot;\nTotal Pages: {total_pages} | Faults: {faults} | Ratio: {round(faults/total_pages, 2)}&quot;)
+p = list(map(int, input().split()))
+n = int(input())
+fifo(p, n)
+
 
 # lru
-pages = list(map(int, input(&quot;Enter Pages: &quot;).split()))
-size = int(input(&quot;No. of Frames: &quot;))
+def lru(p, n):
+    f = []; hit = fault = 0
 
-frames, history, faults = [&quot;-&quot;] * size, [], 0
-total_pages = len(pages)
+    for i in p:
+        if i in f:
+            hit += 1
+            f.remove(i)
+            f.append(i)
+            print(i, "Hit  ", f)
+        else:
+            fault += 1
+            if len(f) < n:
+                f.append(i)
+            else:
+                f.pop(0)
+                f.append(i)
+            print(i, "Fault", f)
 
-print(&quot;\nString | Frames | Status&quot;)
-for p in pages:
-if p in frames:
-status = &quot;Hit&quot;
-history.remove(p)
-else:
-status = &quot;Fault&quot;
-faults += 1
-if &quot;-&quot; in frames:
-idx = frames.index(&quot;-&quot;)
-frames[idx] = p
-else:
-lru_page = history.pop(0)
-idx = frames.index(lru_page)
-frames[idx] = p
-history.append(p)
+    print("Faults =", fault, "Hits =", hit)
 
-print(f&quot;{p} | {frames} | {status}&quot;)
+p = list(map(int, input().split()))
+n = int(input())
+lru(p, n)
 
-print(f&quot;\nTotal Pages: {total_pages} | Faults: {faults} | Ratio: {round(faults/total_pages, 2)}&quot;)
 
-#optimal
-pages = list(map(int, input(&quot;Enter Pages: &quot;).split()))
-size = int(input(&quot;No. of Frames: &quot;))
 
-frames, faults = [&quot;-&quot;] * size, 0
-total_pages = len(pages)
+# optimal
+def optimal(p, n):
+    f = []
+    hit = fault = 0
 
-print(&quot;\nString | Frames | Status&quot;)
-for i in range(total_pages):
-p = pages[i]
-if p in frames:
-status = &quot;Hit&quot;
-else:
-status = &quot;Fault&quot;
-faults += 1
-if &quot;-&quot; in frames:
-idx = frames.index(&quot;-&quot;)
-frames[idx] = p
-else:
-future = pages[i+1:]
-replace_idx, farthest = 0, -1
-for j in range(size):
-if frames[j] not in future:
+    for i in range(len(p)):
+        page = p[i]
 
-replace_idx = j
-break
-elif future.index(frames[j]) &gt; farthest:
-farthest = future.index(frames[j])
-replace_idx = j
-frames[replace_idx] = p
-print(f&quot;{p} | {frames} | {status}&quot;)
+        if page in f:
+            hit += 1
+            print(page, "Hit  ", f)
 
-print(f&quot;\nTotal Pages: {total_pages} | Faults: {faults} | Ratio: {round(faults/total_pages, 2)}&quot;)
+        else:
+            fault += 1
+
+            if len(f) < n:
+                f.append(page)
+            else:
+                far = -1
+                idx = -1
+
+                for j in range(len(f)):
+                    if f[j] not in p[i+1:]:
+                        idx = j
+                        break
+                    else:
+                        nxt = p[i+1:].index(f[j])
+                        if nxt > far:
+                            far = nxt
+                            idx = j
+
+                f[idx] = page
+
+            print(page, "Fault", f)
+
+    print("\nPage Faults =", fault)
+    print("Page Hits =", hit)
+
+
+pages = list(map(int, input("Enter pages: ").split()))
+frames = int(input("Enter frames: "))
+
+optimal(pages, frames)
