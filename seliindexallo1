@@ -39,6 +39,8 @@ def linked_allocation():
 
 # Run
 linked_allocation()
+
+
 def indexed_allocation():
     print("\n--- Indexed Allocation ---")
     file_name = input("Enter file name: ")
